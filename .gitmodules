@@ -1,0 +1,6 @@
+[submodule "auth-service"]
+	path = auth-service
+	url = https://github.com/GuilhermeRoque/auth-service.git
+[submodule "iot-app"]
+	path = iot-app
+	url = https://github.com/GuilhermeRoque/iot-app.git
