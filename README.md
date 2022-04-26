@@ -1,5 +1,4 @@
 # app-mgnt-lorawan
 
-### RUN:
-
+### RUN: (porta 8080)
     docker-compose up --build
