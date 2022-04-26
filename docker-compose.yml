@@ -1,0 +1,29 @@
+version: '3'
+services:
+  front-end:
+    build:
+      dockerfile: test.dockerfile
+      context: ./iot-app/
+    image: guilhermeroque/iot-app-test
+    ports:
+      - "8080:3000"
+    depends_on:
+      - identity-service
+
+  identity-service:
+    build:
+      dockerfile: test.dockerfile
+      context: ./auth-service/
+    image: guilhermeroque/auth-service-test
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  mongo:
+    build:
+      dockerfile: ./auth-service/mongodb.dockerfile
+      context: .
+    image: guilhermeroque/mongodb-test
+    ports:
+      - "27017:27017"
