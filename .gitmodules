@@ -6,3 +6,4 @@
 	path = iot-app
 	url = https://github.com/GuilhermeRoque/iot-app.git
 	branch = main
+# git submodule update --remote --recursive
