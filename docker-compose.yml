@@ -15,8 +15,8 @@ services:
       dockerfile: test.dockerfile
       context: ./auth-service/
     image: guilhermeroque/auth-service-test
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     depends_on:
       - mongo
 
@@ -25,5 +25,5 @@ services:
       dockerfile: ./auth-service/mongodb.dockerfile
       context: .
     image: guilhermeroque/mongodb-test
-    ports:
-      - "27017:27017"
+    # ports:
+    #   - "27017:27017"
