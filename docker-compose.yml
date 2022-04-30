@@ -5,8 +5,12 @@ services:
       dockerfile: test.dockerfile
       context: ./iot-app/
     image: guilhermeroque/iot-app-test
+    environment:
+      - REACT_APP_IDENTITY_SERVER=http://localhost:3000
     ports:
       - "8080:3000"
+    volumes:
+      - ./iot-app/src:/root/src
     depends_on:
       - identity-service
 
@@ -15,8 +19,18 @@ services:
       dockerfile: test.dockerfile
       context: ./auth-service/
     image: guilhermeroque/auth-service-test
-    # ports:
-    #   - "3000:3000"
+    environment:
+      - DB_URL=mongodb://mongo/
+      - DB_NAME=auth-service
+      - DB_USERNAME=myUserAdmin
+      - DB_PASSWORD=password
+      - DB_HOST=mongo
+      - SERVER_PORT=3000
+      - SWAGGER_HOST=localhost:3000
+    volumes:
+      - ./auth-service/src:/root/src
+    ports:
+      - "3000:3000"
     depends_on:
       - mongo
 
@@ -25,5 +39,5 @@ services:
       dockerfile: ./auth-service/mongodb.dockerfile
       context: .
     image: guilhermeroque/mongodb-test
-    # ports:
-    #   - "27017:27017"
+    ports:
+      - "27017:27017"
