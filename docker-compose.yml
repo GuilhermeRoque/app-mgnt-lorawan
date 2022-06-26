@@ -22,8 +22,8 @@ services:
     environment:
       - DB_URL=mongodb://mongo/
       - DB_NAME=auth-service
-      - DB_USERNAME=myUserAdmin
-      - DB_PASSWORD=password
+      - DB_USERNAME=lorawanMgnt-admin
+      - DB_PASSWORD=lorawanMgnt-admin
       - DB_HOST=mongo
       - SERVER_PORT=3000
       - SWAGGER_HOST=localhost:3000
@@ -35,9 +35,43 @@ services:
       - mongo
 
   mongo:
-    build:
-      dockerfile: ./auth-service/mongodb.dockerfile
-      context: .
-    image: guilhermeroque/mongodb-test
+    image: mongo:5.0-focal
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=lorawanMgnt-admin
+      - MONGO_INITDB_ROOT_PASSWORD=lorawanMgnt-admin
     ports:
       - "27017:27017"
+
+
+  telegraf:
+    image: telegraf:1.23
+    environment:
+      - USER=lorawanMgnt-admin
+      - INFLUX_URL=influxdb
+      - INFLUX_SKIP_DATABASE_CREATION=true
+      - INFLUX_PASSWORD=lorawanMgnt-admin
+      - INFLUX_BUCKET=lorawanMgnt-bucket
+      - INFLUX_ORG=lorawanMgnt-org
+      - INFLUX_TOKEN=8s7p1LY3SSGWX-yH2UAKPKABloCcH2s3MwWr71sKRsCBYbloJn_iYP70-ZUhOXi7870CYesIT5SNeYHsxFU4rQ==
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    depends_on:
+      - influxdb
+
+
+
+  influxdb:
+    image: influxdb:2.3.0
+    environment: 
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=lorawanMgnt-admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=lorawanMgnt-admin
+      - DOCKER_INFLUXDB_INIT_ORG=lorawanMgnt-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=lorawanMgnt-bucket
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=8s7p1LY3SSGWX-yH2UAKPKABloCcH2s3MwWr71sKRsCBYbloJn_iYP70-ZUhOXi7870CYesIT5SNeYHsxFU4rQ==
+    volumes:
+      - ./influxdb2:/var/lib/influxdb2:rw
+    ports:
+      - "8086:8086"
+
+
