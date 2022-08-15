@@ -14,3 +14,6 @@
 [submodule "web-service-utils"]
 	path = web-service-utils
 	url = https://github.com/GuilhermeRoque/web-service-utils.git
+[submodule "device-mgnt"]
+	path = device-mgnt
+	url = https://github.com/GuilhermeRoque/device-mgnt.git
