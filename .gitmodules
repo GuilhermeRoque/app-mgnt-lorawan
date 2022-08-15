@@ -1,7 +1,7 @@
 [submodule "auth-service"]
 	path = auth-service
 	url = https://github.com/GuilhermeRoque/auth-service.git
-	branch = main
+	branch = micro
 [submodule "iot-app"]
 	path = iot-app
 	url = https://github.com/GuilhermeRoque/iot-app.git
@@ -14,6 +14,9 @@
 [submodule "web-service-utils"]
 	path = web-service-utils
 	url = https://github.com/GuilhermeRoque/web-service-utils.git
+	branch = main
 [submodule "device-mgnt"]
 	path = device-mgnt
 	url = https://github.com/GuilhermeRoque/device-mgnt.git
+	branch = main
+

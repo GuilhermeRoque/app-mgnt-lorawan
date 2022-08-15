@@ -1,18 +1,40 @@
 version: '3'
 services:
+  api-gateway:
+    build:
+      dockerfile: test.dockerfile
+      context: ./api-gateway-auth/
+    image: guilhermeroque/api-gateway-auth
+    environment:
+      - IDENTITY_SERVICE=http://identity-service:3000
+      - FRONT_END=http://front-end:3000
+      - DEVICE_MGNT= http://device-mgnt:3000
+      - ACCESS_TOKEN_SECRET=45d239dd6d20d8e4c5919079a40e5ea6cf8d9ab0
+      - REFRESH_TOKEN_SECRET=45d239dd6d20d8e4c5919079a40e5ea6cf8d9ab0
+      - REDIS_URL=redis://redis:6379
+      - ACCESS_TOKEN_TIMEOUT=10s
+      - REFRESH_TOKEN_TIMEOUT=1d
+    volumes:
+      - ./api-gateway-auth/src:/root/src
+    ports:
+      - 8000:3000
+    depends_on:
+      - redis
+      - identity-service
+      - device-mgnt
+      - front-end
+
   front-end:
     build:
       dockerfile: test.dockerfile
       context: ./iot-app/
     image: guilhermeroque/iot-app-test
     environment:
-      - REACT_APP_IDENTITY_SERVER=http://localhost:3000
+      - REACT_APP_API_GATEWAY=http://localhost:8000/api
     ports:
       - "8080:3000"
     volumes:
       - ./iot-app/src:/root/src
-    depends_on:
-      - identity-service
 
   identity-service:
     build:
@@ -27,6 +49,11 @@ services:
       - DB_HOST=mongo
       - SERVER_PORT=3000
       - SWAGGER_HOST=localhost:3000
+      - DEVICE_LISTENER=http://devicelistener:3333
+      - ACCESS_TOKEN_SECRET=45d239dd6d20d8e4c5919079a40e5ea6cf8d9ab0
+      - REFRESH_TOKEN_SECRET=45d239dd6d20d8e4c5919079a40e5ea6cf8d9ab0
+      - ACCESS_TOKEN_TIMEOUT=300s
+      - REFRESH_TOKEN_TIMEOUT=1d
     volumes:
       - ./auth-service/src:/root/src
     ports:
@@ -34,6 +61,38 @@ services:
     depends_on:
       - mongo
 
+  device-mgnt:
+    build:
+      dockerfile: test.dockerfile
+      context: ./device-mgnt
+    image: guilhermeroque/device-mgnt
+    environment:
+      - BROKER_TTN=eu1.cloud.thethings.network
+      - PORT_TTN=1883
+      - PASSWORD_TTN=NNSXS.4UEYPLW2ZI765HTJSQSKEUSV3XCZ3UBTFRF3XNA.JR3QGULLZVMS5HYA2AHY47XRJQTDKCJ3IPTLRLJ7I7UO2K2QPZAA
+      - BASE_URL_INFLUX=http://influxdb:8086
+      - TOKEN_INFLUX=8s7p1LY3SSGWX-yH2UAKPKABloCcH2s3MwWr71sKRsCBYbloJn_iYP70-ZUhOXi7870CYesIT5SNeYHsxFU4rQ==
+      - BUCKET_INFLUX=lorawanMgnt-bucket
+      - ORGANIZATION_INFLUX=lorawanMgnt-org
+      - DB_URL=mongodb://mongo/
+      - DB_NAME=auth-service
+      - DB_USERNAME=lorawanMgnt-admin
+      - DB_PASSWORD=lorawanMgnt-admin
+      - DB_HOST=mongo
+      - SERVER_PORT=3000
+    ports:
+      - "3333:3000"
+    depends_on:
+      - influxdb
+      - mongo
+    volumes:
+      - ./device-mgnt/src:/root/src
+
+  redis: 
+    image: redis:7.0.4
+    ports:
+      - "6379:6379"
+      
   mongo:
     image: mongo:5.0-focal
     environment:
@@ -41,24 +100,6 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=lorawanMgnt-admin
     ports:
       - "27017:27017"
-
-
-  telegraf:
-    image: telegraf:1.23
-    environment:
-      - USER=lorawanMgnt-admin
-      - INFLUX_URL=influxdb
-      - INFLUX_SKIP_DATABASE_CREATION=true
-      - INFLUX_PASSWORD=lorawanMgnt-admin
-      - INFLUX_BUCKET=lorawanMgnt-bucket
-      - INFLUX_ORG=lorawanMgnt-org
-      - INFLUX_TOKEN=8s7p1LY3SSGWX-yH2UAKPKABloCcH2s3MwWr71sKRsCBYbloJn_iYP70-ZUhOXi7870CYesIT5SNeYHsxFU4rQ==
-    volumes:
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
-    depends_on:
-      - influxdb
-
-
 
   influxdb:
     image: influxdb:2.3.0
