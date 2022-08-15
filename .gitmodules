@@ -7,3 +7,10 @@
 	url = https://github.com/GuilhermeRoque/iot-app.git
 	branch = main
 # git submodule update --remote --recursive
+[submodule "api-gateway-auth"]
+	path = api-gateway-auth
+	url = https://github.com/GuilhermeRoque/api-gateway-auth.git
+	branch = main
+[submodule "web-service-utils"]
+	path = web-service-utils
+	url = https://github.com/GuilhermeRoque/web-service-utils.git
