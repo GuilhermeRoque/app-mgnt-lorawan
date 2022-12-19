@@ -1,7 +1,7 @@
 [submodule "auth-service"]
 	path = auth-service
 	url = https://github.com/GuilhermeRoque/auth-service.git
-	branch = micro
+	branch = main
 [submodule "iot-app"]
 	path = iot-app
 	url = https://github.com/GuilhermeRoque/iot-app.git
