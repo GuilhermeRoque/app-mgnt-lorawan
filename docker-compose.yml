@@ -12,9 +12,10 @@ services:
       - ACCESS_TOKEN_SECRET=45d239dd6d20d8e4c5919079a40e5ea6cf8d9ab0
       - REFRESH_TOKEN_SECRET=45d239dd6d20d8e4c5919079a40e5ea6cf8d9ab0
       - REDIS_URL=redis://redis:6379
-      - APP_ENV=local
+      - APP_ENV=production
       - INFLUX_URL=http://influxdb:8086
       - INFLUX_TOKEN=8s7p1LY3SSGWX-yH2UAKPKABloCcH2s3MwWr71sKRsCBYbloJn_iYP70-ZUhOXi7870CYesIT5SNeYHsxFU4rQ==
+      - DATA_ANALYTICS=http://data-analytics:5555
 
     volumes:
       - ./api-gateway-auth/src:/root/src
@@ -33,7 +34,7 @@ services:
     image: guilhermeroque/iot-app-test
     environment:
       - REACT_APP_API_GATEWAY=http://localhost:8000/api
-      - REACT_APP_APP_ENV=local
+      - REACT_APP_APP_ENV=production
     ports:
       - "8080:3000"
     volumes:
@@ -56,7 +57,7 @@ services:
       - REFRESH_TOKEN_SECRET=45d239dd6d20d8e4c5919079a40e5ea6cf8d9ab0
       - ACCESS_TOKEN_TIMEOUT=300s
       - REFRESH_TOKEN_TIMEOUT=1d
-      - APP_ENV=local
+      - APP_ENV=production
     volumes:
       - ./auth-service/src:/root/src
     ports:
@@ -81,7 +82,7 @@ services:
       - DB_PASSWORD=lorawanMgnt-admin
       - DB_HOST=mongo
       - SERVER_PORT=3000
-      - APP_ENV=local
+      - APP_ENV=production
       - WS_PORT=5000
     ports:
       - "3333:3000"
@@ -91,6 +92,13 @@ services:
       - mongo
     volumes:
       - ./device-mgnt/src:/root/src
+  
+  data-analytics:
+    build:
+      dockerfile: Dockerfile
+      context: ./data-analytics
+    image: guilhermeroque/data-analytics
+    environment:
 
   redis: 
     image: redis:7.0.4
