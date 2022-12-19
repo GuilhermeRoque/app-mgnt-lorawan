@@ -19,10 +19,11 @@
 	path = device-mgnt
 	url = https://github.com/GuilhermeRoque/device-mgnt.git
 	branch = main
-
 [submodule "device-proxy"]
 	path = device-proxy
 	url = https://github.com/GuilhermeRoque/device-proxy.git
+	branch = main
 [submodule "data-analyser"]
 	path = data-analyser
 	url = https://github.com/GuilhermeRoque/data-analyser.git
+	branch = main
