@@ -14,9 +14,10 @@ services:
       - REFRESH_SECRET=/root/refresh-token.pub
       - REDIS_URL=redis://redis:6379
       - INFLUX_URL=http://influxdb:8086
-      - INFLUX_BUCKET=lorawanMgnt-bucket
+      - INFLUX_BUCKET=lorawan-bucket
       - INFLUX_TOKEN=8s7p1LY3SSGWX-yH2UAKPKABloCcH2s3MwWr71sKRsCBYbloJn_iYP70-ZUhOXi7870CYesIT5SNeYHsxFU4rQ==
       - DATA_ANALYSER=http://data-analyser:5555
+      - CLIENT_ENTRYPOINT_URL=http://front-end:3000
 
     volumes:
       - ./api-gateway-auth/src:/root/src
@@ -52,8 +53,8 @@ services:
       - APP_ENV=production
       - DB_URL=mongodb://mongo/
       - DB_NAME=identity-service
-      - DB_USERNAME=lorawanMgnt-user
-      - DB_PASSWORD=lorawanMgnt-password
+      - DB_USERNAME=lorawan-user
+      - DB_PASSWORD=lorawan-password
       - DB_HOST=mongo
       - SERVER_PORT=3000
       - SWAGGER_HOST=localhost:3000
@@ -61,6 +62,7 @@ services:
       - REFRESH_SECRET=/root/refresh-token.key
       - ACCESS_TIMEOUT=300s
       - REFRESH_TIMEOUT=1d
+      - SECRET=29a2ac06-d5cb-4fd3-85ee-00d42234d41d
     volumes:
       - ./auth-service/src:/root/src
     ports:
@@ -76,6 +78,7 @@ services:
     environment:
       - APP_ENV=production
       - BROKER_TTN=eu1.cloud.thethings.network
+      - USER_TTN=lorawan-mgnt
       - PORT_TTN=1883
       - PASSWORD_TTN=NNSXS.4UEYPLW2ZI765HTJSQSKEUSV3XCZ3UBTFRF3XNA.JR3QGULLZVMS5HYA2AHY47XRJQTDKCJ3IPTLRLJ7I7UO2K2QPZAA
       - DB_URL=mongodb://mongo/
@@ -121,7 +124,7 @@ services:
       - BASE_URL_INFLUX=http://influxdb:8086
       - BROKER_TTN=eu1.cloud.thethings.network
       - PORT_TTN=1883
-      - APPLICATION_MGR=device-mgnt:5000
+      - APP_MGR=device-mgnt:5000
     depends_on:
       - influxdb
       - device-mgnt
